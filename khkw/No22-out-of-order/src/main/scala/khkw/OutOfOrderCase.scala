@@ -46,9 +46,10 @@ object OutOfOrderCase {
         ctx.collect("key", 3000L)
         ctx.collect("key", 3000L)
         ctx.collect("key", 4000L)
-        ctx.collect("key", 5000L)
+        ctx.collect("key", 6000L)
         // out of order
         ctx.collect("key", 4000L)
+        ctx.collect("key", 1000L)
         ctx.collect("key", 6000L)
         ctx.collect("key", 6000L)
         ctx.collect("key", 7000L)
@@ -64,17 +65,27 @@ object OutOfOrderCase {
       }
     }).assignTimestampsAndWatermarks(new AssignerWithPunctuatedWatermarks[(String, Long)] {
 
-      //      private val outOfOrder = 0
+      //            private val outOfOrder = 0
       // Result
       // (key,13000)
-      // (key,32000)
+      // (key,33000)
       // (key,10000)
 
       private val outOfOrder = 3000
       // Result
-      // (key,17000)
-      // (key,49000)
+      // (key,18000)
+      // (key,50000)
       // (key,10000)
+
+      //      private val outOfOrder = 1000
+      // Result
+      // (key,13000)
+      // (key,50000)
+      // (key,10000)
+      //何时不再处理outOfOrder的数据？这个问题应该说是何时时间窗口何时可以判断为结束，这里应当以watermark为准，Watermark才是最终的裁判。
+      // 当（key,6000）到达时，watermark为5000，触发了第一个时间窗口[0,5000)的计算，之后到达的数据(key,4000),(key,1000)不再参与计算
+      // 当 ("key", 10000L)数据流入时，watermark为9000，第二个时间窗口[5000,9000)仍未关闭，因此之后的（key,8000）,(key,9000)均参与计算
+      //数据流结束后发送一个Long.MAX_VALUE的Watermark，触发第三个时间窗口的计算
 
       override def extractTimestamp(element: (String, Long), previousTimestamp: Long): Long = {
         element._2
