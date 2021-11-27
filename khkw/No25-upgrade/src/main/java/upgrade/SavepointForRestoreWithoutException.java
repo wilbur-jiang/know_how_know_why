@@ -12,11 +12,11 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
  * 操作步骤:
  *        0. 进行SavepointForRestore的测试之后，进行这个测试
  *        1. 打包： mvn clean package
- *        2. 其中作业：bin/flink run -d -m localhost:4000 -c upgrade.SavepointForRestoreWithoutException /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
- *        3.创建savepoint： bin/flink savepoint 1fb52d2d72906045dbba2ce4199f245b
- *        4. 停止以前的作业，然后从savepoint启动
+ *        2. 其中作业：bin/flink run -d -m localhost:4000 -c upgrade.SavepointForRestoreWithoutException /Users/wilburjiang/Documents/GitHub/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
+ *        3.创建savepoint： bin/flink savepoint 1fb52d2d72906045dbba2ce4199f245b （只创建savepoint，并不会cancel作业）
+ *        4. 停止以前的作业，然后从savepoint启动 bin/flink cancel -s 1fb52d2d72906045dbba2ce4199f245b (cancel作业并创建savepoint)
  *        6. bin/flink run -m localhost:4000 -s file:///tmp/chkdir/savepoint-1fb52d-126a8a0e36c3
- *     -c upgrade.SavepointForRestoreWithoutException /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar \
+ *     -c upgrade.SavepointForRestoreWithoutException /Users/wilburjiang/Documents/GitHub/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar \
  * 作者： 孙金城
  * 日期： 2020/6/29
  */

@@ -34,9 +34,9 @@ import java.sql.Timestamp;
  *          - state.backend.local-recovery: true
  *
  *        4. bin/start-cluster.sh local
- *        5. bin/flink run -m localhost:4000 -c upgrade.SavepointForRestore /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
+ *        5. bin/flink run -m localhost:4000 -c upgrade.SavepointForRestore /Users/wilburjiang/Documents/GitHub/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
  *        6. bin/flink run -m localhost:4000 -s file:///tmp/chkdir/caab8d0a04aa0ce718da5333cad10607/chk-364
- *        -c upgrade.SavepointForRestore /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar \
+ *        -c upgrade.SavepointForRestore /Users/wilburjiang/Documents/GitHub/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar \
  *        upgrade.SavepointForRestore
  *
  *        7. 将程序去除异常，运行之后，触发savepoint
