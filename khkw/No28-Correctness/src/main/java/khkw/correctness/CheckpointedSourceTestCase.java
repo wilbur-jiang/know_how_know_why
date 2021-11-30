@@ -28,8 +28,8 @@ public class CheckpointedSourceTestCase {
 
         env.enableCheckpointing(20);
 
-        nonParallel(env);
-//        parallel(env);
+//        nonParallel(env);
+        parallel(env);
 //        parallelFromTaskIndex(env);
 
         env.execute("NonParallelCheckpointedSource");

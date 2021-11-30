@@ -23,6 +23,19 @@ import java.util.concurrent.TimeUnit;
  *        2. env.enableCheckpointing(20),再执行作业失败重启Sum值会基于以前的State进行续跑。
  *        NOTE: 主要观察Source没有进行消费位置的记录的话，failover之后数据源的数据
  *  *         会重复消费。
+ *  *
+ * (key,1,2021-11-30 09:29:42.329)  index = 1
+ * (key,3,2021-11-30 09:29:42.329)  index =2
+ * (key,6,2021-11-30 09:29:42.329)  index =3
+ * (key,10,2021-11-30 09:29:42.329) index =4
+ * (key,15,2021-11-30 09:29:42.329) index = 5
+ * (key,21,2021-11-30 09:29:42.329) index=6
+ * (key,28,2021-11-30 09:29:42.329) index=7
+ * (key,36,2021-11-30 09:29:42.329) index=8
+ * (key,45,2021-11-30 09:29:42.329) index=9
+ * 此时发生failover，如果继续从上次的offset消费，预期结果应该是 （key,55）index = 10,而下边打印的结果却是：
+ * (key,46,2021-11-30 09:29:42.329) index=1
+ * 说明发生了重复消费。
  * <p>
  * 作者： 孙金城
  * 日期： 2020/7/12
@@ -36,7 +49,7 @@ public class No25SourceWithoutCheckpointed {
         env.setRestartStrategy(
                 RestartStrategies.fixedDelayRestart(3, Time.of(2, TimeUnit.SECONDS) ));
 
-//        env.enableCheckpointing(20);
+        env.enableCheckpointing(20);
 
         DataStream<Tuple3<String, Integer, Long>> source = env
                 .addSource(new SourceFunction<Tuple3<String, Integer, Long>>() {

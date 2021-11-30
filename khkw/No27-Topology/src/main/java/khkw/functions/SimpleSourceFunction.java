@@ -17,7 +17,7 @@ public class SimpleSourceFunction implements SourceFunction<Tuple3<String, Integ
         while (true) {
             ctx.collect(new Tuple3<>("key", ++index, System.currentTimeMillis()));
             ctx.collect(new Tuple3<>("key2", index, System.currentTimeMillis()));
-            ctx.collect(new Tuple3<>("key3", index, System.currentTimeMillis()));
+//            ctx.collect(new Tuple3<>("key3", index, System.currentTimeMillis()));
             Thread.sleep(500);
         }
     }

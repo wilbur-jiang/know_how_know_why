@@ -60,8 +60,7 @@ public class TopologyChanges {
 
         // 大家可以在 https://flink.apache.org/visualizer/ 生成拓扑图
         String planJson = env.getExecutionPlan();
-        LOG.info(planJson);
-
+        System.out.println(planJson);
         env.execute("TopologyChanges");
     }
 
