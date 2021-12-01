@@ -64,6 +64,14 @@ public class ParallelCheckpointedSource
         offsetState = ctx
                 .getOperatorStateStore()
                 .getListState(new ListStateDescriptor<>(OFFSETS_STATE_NAME, Types.LONG));
+        /**
+         * getListState在任务failover后，并不会维护task与状态之间的关联关系；
+         * task0: offset为5
+         * task1: offset为10
+         * 在任务failover后，使用getListState并不能确定是继续从哪个offset消费，大多数应用的场景下，我们也不需要关注哪个任务对应哪个分片，只要每个分片都是从上次继续消费就可以。
+         * 对于之前疑惑的partition与offset如何对应的问题，其实应该是状态保存时直接保存好对应的class，这里示例保存一个Long比较简单而已。
+         * getListState中各个状态是独立的，当算子并行度发生变更时，也会重新分配各个状态到对应的算子，分配的方式是轮询。
+         */
 
         for (Long offsetValue : offsetState.get()) {
             offset = offsetValue;
