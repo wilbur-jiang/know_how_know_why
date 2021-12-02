@@ -74,6 +74,11 @@ public class ParallelCheckpointedSourceRestoreFromTaskIndex
         offsetState = ctx
                 .getOperatorStateStore()
                 .getUnionListState(new ListStateDescriptor<>(OFFSETS_STATE_NAME, new MapTypeInfo(Types.INT, Types.LONG)));
+        //getUnionListState 通过广播的形式发送状态，即每个task都可以拿到全部的在维护的状态
+        //这里的实现方式是维护了Map类型的ListState，每个task可以获取到全部状态，遍历map，根据indexOfTask遍历获取对应的状态
+        //适合于failover后，需要task继续从上次消费的partition和上次消费的offset继续消费的应用场景。
+        //思考了下，这种应用场景使用于某种特殊侧partition策略，例如id对10取余，分成10个partition。第0个task绑定到第0个partition。
+        //如果其他的应用场景，task所在计算节点发生变化，并不能保证之前的task继续消费之前的状态
 
         int size = 0;
         for (Map<Integer, Long> allOffset : offsetState.get()) {
